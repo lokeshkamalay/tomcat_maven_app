@@ -1,9 +1,13 @@
 pipeline{
     agent none
+
     environment{
         SONARQUBE_URL = ''
-        SONARQUBE_LOGIN = credentials('SQ_LOGIN')
+        SONARQUBE_LOGIN = credentials('sonar-login')
 
+    }
+    parameters {
+        choice(choices: 'Yes\nNo', description: 'Pls choose the environment to deploy', name: 'Deploy')
     }
     // tools{}
     // options{}
@@ -16,48 +20,73 @@ pipeline{
                 }
             }
             steps {
-                sh 'mvn settings settings.xml test verify surefire-report:report-only sonar:sonar -Dsonar.host.url=$SONARQUBE_URL -Dsonar.login=$SONARQUBE_LOGIN'
+                sh 'mvn test verify'
             }
             post {
                 success {
-                    junit "target/surefire-reports/*.xml"
-                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'target/site', reportFiles: 'surefire-report.html', reportName: 'SureFireReportHTML', reportTitles: ''])
+                    echo "Success"
+                    //junit "target/surefire-reports/*.xml"
+                    //publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'target/site', reportFiles: 'surefire-report.html', reportName: 'SureFireReportHTML', reportTitles: ''])
                 }
             }
 
         }
 
-        stage('Read the POM'){
+        stage('Build'){
             agent {
                 dockerfile {
-                    filename 'Dockerfile-maven'
+                    filename 'Dockerfile-project'
                     label 'dockernode'
                 }
             }
-            steps{
-                script{
-                    pom = readMavenPom file: 'pom.xml'
-                    ARTIFACT_NAME = pom.artifactId.toString()
+            stages{
+                stage('Read the POM'){
+                    steps{
+                        script{
+                            pom = readMavenPom file: 'pom.xml'
+                            ARTIFACT_NAME = pom.artifactId.toString()
+                        }
+
+                    }
+                }
+                stage('Packaging'){
+                    steps{
+                        sh 'mvn clean install'
+                    }
+                }
+                stage('Deploying'){
+                    steps{
+                        sh 'mvn package -DSkipTests=true'
+                        //sh "package name is $ARTIFACT_NAME"
+                        stash includes: "target/${ARTIFACT_NAME}.war", name: 'artifact'
+                    }
+                    post {
+                        success {
+                            echo "Package has been uploaded to Artifactory Successfully"
+                        }
+                    }
                 }
             }
-            // stages{
-            //     stage('Packaging'){
-            //         steps{
-            //             sh 'mvn clean install --settings settings.xml'
-            //         }
-            //     }
-            //     stage('Deploying'){
-            //         steps{
-            //             sh 'mvn deploy -DSkipTests=true --settings settings.xml'
-            //             stash includes: "target/{$ARTIFACT_NAME}.war", name: 'artifact'
-            //         }
-            //         post {
-            //             success {
-            //                 echo "Package has been uploaded to Artifactory Successfully"
-            //             }
-            //         }
-            //     }
-            // }
+        }
+        stage('Deployment'){
+            when {
+                beforeAgent true
+                expression { params.Deploy == 'Yes'}
+            }
+            parallel {
+                stage('To VM'){
+                    agent{ label 'dockernode' }
+                    steps{
+                        echo "Deploy here to vm"
+                    }
+                }
+                stage('To Image'){
+                    agent{ label 'dockernode'}
+                    steps{
+                        echo "Docker Steps goes here"
+                    }
+                }
+            }
         }
     }
 }
