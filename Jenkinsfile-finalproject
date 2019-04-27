@@ -2,7 +2,7 @@ pipeline{
     agent none
     environment{
         SONARQUBE_URL = ''
-        SONARQUBE_LOGIN = credentials('SQ_LOGIN')
+        SONARQUBE_LOGIN = credentials('sonar-login')
 
     }
     tools{
