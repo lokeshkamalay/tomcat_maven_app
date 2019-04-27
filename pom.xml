@@ -41,4 +41,16 @@
       </plugin>
     </plugins>
   </build>
+  <distributionManagement>
+    <repository>
+        <id>artifactory-releases</id>
+        <name>maven</name>
+        <url>http://136f84f1.ngrok.io/artifactory/releases</url>
+    </repository>
+    <snapshotRepository>
+        <id>artifactory-snapshots</id>
+        <name>artifactory</name>
+        <url>http://136f84f1.ngrok.io/artifactory/snapshots</url>
+    </snapshotRepository>
+</distributionManagement>  
 </project>
