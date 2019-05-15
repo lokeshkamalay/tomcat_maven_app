@@ -1,14 +1,30 @@
+@Library('SharedLibrary') _
+
 node('docker'){
     def nginx_repo = "lokeshkamalay/nginx:latest"
     def tomcat_repo = "lokeshkamalay/tomcat"
 
     stage ('checkout'){
-	checkout scm
+	    git 'https://github.com/lokeshkamalay/tomcat_maven_app.git'
     }
     
     stage('Build'){
         docker.image('maven:latest').inside(){
-            sh "mvn clean package"
+            printName(
+                name: 'loki',
+                mode: 'lower'
+            )
+            myMaven (
+                clean: 'true',
+                goal: 'package',
+                sonar: 'true'
+            )
+            myMaven (
+                clean: 'false',
+                goal: 'test',
+                sonar: 'false'
+            )
+        //sh "sleep 600"
         }
     }
     
