@@ -27,7 +27,7 @@ pipeline {
             input {
                 message 'Do You Want me to Deploy to Prod?'
                 ok 'Yes Go Ahead'
-                submitter: 'madhav'
+                submitter 'madhav'
             }
             steps{
                 sh "touch abc.txt"
