@@ -8,7 +8,7 @@ pipeline {
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '1'))
-        timeout (time: 20, unit: 'SECONDS')
+        timeout (time: 30, unit: 'SECONDS')
     }
     environment {
         VAR1 = "Test Variable"
@@ -25,8 +25,9 @@ pipeline {
                 label 'test'
             }
             input {
-                message 'Do You want me to continue?'
-                ok 'Yes'
+                message 'Do You Want me to Deploy to Prod?'
+                ok 'Yes Go Ahead'
+                submitter: 'madhav'
             }
             steps{
                 sh "touch abc.txt"
