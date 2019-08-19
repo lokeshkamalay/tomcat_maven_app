@@ -16,4 +16,13 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            echo "The job is successful"
+            deleteDir()
+        }
+        failure {
+            echo "Shoot an email"
+        }
+    }
 }
