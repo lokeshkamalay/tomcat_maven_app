@@ -10,11 +10,6 @@ pipeline {
         VAR1 = "Test Variable"
     }
     stages{
-        stage('Clear Workspace'){
-            steps{
-                deleteDir()
-            }
-        }
         stage('Build'){
             steps{
                 sh "mvn clean package"
