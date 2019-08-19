@@ -8,7 +8,7 @@ pipeline {
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '1'))
-        timeout (time: 1, unit: 'SECONDS')
+        timeout (time: 20, unit: 'SECONDS')
     }
     environment {
         VAR1 = "Test Variable"
@@ -19,9 +19,14 @@ pipeline {
                 sh "mvn clean package"
             }
         }
+
         stage('Print Public Key'){
             agent {
                 label 'test'
+            }
+            input {
+                message 'Do You want me to continue?'
+                ok 'Yes'
             }
             steps{
                 sh "touch abc.txt"
