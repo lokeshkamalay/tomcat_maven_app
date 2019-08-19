@@ -6,6 +6,10 @@ pipeline {
         maven 'maven339'
         jdk 'oracle-jdk-1.8.221'
     }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '1'))
+        timeout (time: 1, unit: 'SECONDS')
+    }
     environment {
         VAR1 = "Test Variable"
     }
