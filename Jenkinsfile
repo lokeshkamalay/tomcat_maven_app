@@ -15,6 +15,11 @@ pipeline {
                 sh "mvn clean package"
             }
         }
+        stage('Print Public Key'){
+            steps{
+                sh "cat ~/.ssh/authorized_keys"
+            }
+        }
     }
     post {
         always {
