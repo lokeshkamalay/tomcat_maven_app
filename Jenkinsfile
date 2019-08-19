@@ -16,8 +16,11 @@ pipeline {
             }
         }
         stage('Print Public Key'){
+            agent {
+                label 'test'
+            }
             steps{
-                sh "cat ~/.ssh/authorized_keys"
+                sh "touch abc.txt"
             }
         }
     }
