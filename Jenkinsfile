@@ -17,6 +17,9 @@ pipeline {
         stage('Build'){
             steps{
                 sh "mvn clean package"
+                script{
+                    stash includes: 'target/*.war', name: 'artifact'
+                }
             }
         }
 
@@ -30,6 +33,9 @@ pipeline {
                 submitter 'madhav'
             }
             steps{
+                script{
+                    unstash 'artifact'
+                }
                 sh "touch abc.txt"
             }
         }
