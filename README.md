@@ -1,6 +1,6 @@
 # CI-CD with Docker
 Here is the step by step instructions to host a highly available website.
-testing the hook
+testing the hook again commiting
 ## Pre-requisites
 1. Create an account in dockerhub
 2. Machine with Jenkins up and running
