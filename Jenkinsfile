@@ -46,7 +46,7 @@ pipeline {
             deleteDir()
         }
         failure {
-            echo "Shoot an email"
+            echo "Shoot an email Committing this from git bash"
         }
     }
 }
