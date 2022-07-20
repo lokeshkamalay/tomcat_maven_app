@@ -1,0 +1,31 @@
+pipeline {
+    agent {
+        label 'docker'
+    }
+    // environment {
+
+    // }
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/lokeshkamalay/tomcat_maven_app.git'
+            }
+        }
+        stage('Build') {
+            agent {
+                docker {
+                    image 'maven:latest'
+                    label 'docker'
+                }
+            }
+            steps {
+                sh "mvn clean package"
+            }
+        }
+        stage('verify the output') {
+            steps {
+                sh "ls -latr"
+            }
+        }
+    }
+}
