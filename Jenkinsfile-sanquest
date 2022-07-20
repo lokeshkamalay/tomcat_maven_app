@@ -3,10 +3,9 @@ pipeline {
         label 'docker'
     }
     options { skipDefaultCheckout() }
-    // environment {
-
-
-    // }
+    environment {
+        DOCKER_LOGINS = credentials('docker-login')
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -22,12 +21,17 @@ pipeline {
                 }
             }
             steps {
-                sh "mvn clean package"
+                sh "mvn --version"
             }
         }
-        stage('verify the output') {
+        stage('Build Docker image') {
             steps {
-                sh "ls -latr"
+                sh """
+                 docker login -u $DOCKER_LOGINS_USR -p $DOCKER_LOGINS_PSW
+                 docker build -t lokeshkamalay/sanquest:v1 -f Dockerfile1 .
+                 docker push lokeshkamalay/sanquest:v1
+                """
+
             }
         }
     }
