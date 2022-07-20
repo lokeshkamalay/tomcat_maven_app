@@ -9,13 +9,13 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/lokeshkamalay/tomcat_maven_app.git'
+                git 'https://github.com/lokeshkamalay/simple-java-maven-app'
             }
         }
         stage('Build') {
             agent {
                 docker {
-                    image 'maven:3.3.9-jdk-9'
+                    image 'maven'
                     label 'docker'
                 }
             }
