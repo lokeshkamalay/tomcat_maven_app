@@ -10,6 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                deleteDir()
                 git 'https://github.com/lokeshkamalay/simple-java-maven-app'
             }
         }
