@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 deleteDir()
-                git 'https://github.com/lokeshkamalay/simple-java-maven-app'
+                git 'https://github.com/lokeshkamalay/tomcat_maven_app'
             }
         }
         stage('Build') {
